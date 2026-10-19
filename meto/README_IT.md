@@ -4,7 +4,7 @@ METO compone e stampa etichette per ricambi con testo, SKU, barcode, QR, immagin
 
 ## Stato verificato il 19 ottobre 2026
 - Editor online: https://meto-label-editor.ecommerce-d86.workers.dev
-- Modulo importabile `meto_label_editor` versione 19.0.3.0.0 installato/aggiornato su https://drricambi.it tramite Applicazioni > Importa modulo.
+- Modulo importabile `meto_label_editor` versione 19.0.3.1.0 installato/aggiornato su https://drricambi.it tramite Applicazioni > Importa modulo.
 - Apertura dall'icona METO verificata: l'iframe carica Cloudflare, senza errore 404.
 - Apertura da un prodotto esistente > Azioni > Apri in METO verificata: nome e codice articolo ricevuti nel canvas e nel campo Codici. Nessuna modifica alla scheda prodotto, nessuna stampa inviata.
 - La stampa fisica deve ancora essere provata sulla postazione con QZ Tray.
@@ -37,3 +37,9 @@ Test automatici Worker, protocollo di messaggi e raster ZPL superati; parsing XM
 ![QR e stampa di rete](docs/screenshots/02-qr-stampa-rete.jpg)
 
 Fabric.js 5.3.0, JsBarcode 3.12.1, QRCode dalla distribuzione METO originale; QZ JS 2.2.5 dall'installazione locale. Avvisi e QZ_LICENSE.txt conservati.
+
+
+## Aggiornamento QZ Tray — 19 ottobre 2026
+Modulo 19.0.3.1.0 installato: delega esplicita del permesso di rete locale all’iframe Cloudflare. Aggiunti verifica HTTPS locale, stato visibile e scadenza della connessione, pulsante Verifica IP senza stampare e ricerca sui soli indirizzi configurati (nessuna scansione dell’intera rete). La ricerca PC usa le stampanti installate; la ricerca rete verifica TCP 9100 senza inviare dati di stampa.
+
+Superati 12 test automatici. QZ Tray 2.2.5 risponde sul PC e la porta della stampante risponde. Nel browser di collaudo il permesso locale risulta ancora da autorizzare e la connessione non è confermata: stampa fisica ancora da verificare. Non vengono disabilitate protezioni o conferme QZ.

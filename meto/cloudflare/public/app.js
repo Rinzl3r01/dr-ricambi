@@ -59,6 +59,7 @@ function currentPreset() {
 
 function setStatus(text) {
   $("statusText").textContent = text || "";
+  if ($("qzStatus")) $("qzStatus").textContent = text || "";
 }
 
 function post(payload) {

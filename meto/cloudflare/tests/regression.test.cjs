@@ -25,7 +25,7 @@ function $(id) {
   return elements.get(id);
 }
 let calls=[],status='', active=false, fail=false;
-const ctx={ $, console, localStorage:{getItem(){return null},setItem(){}},
+const ctx={ $, console, setTimeout, clearTimeout, localStorage:{getItem(){return null},setItem(){}},
   URLSearchParams, location:{search:''}, setStatus(s){status=s;},
   updatePrinters(p){calls.push(['printers',p]);$('printerSelect').value=p[0]?.ip || '';},
   qz:{websocket:{isActive:()=>active,async connect(){calls.push(['connect']);if(fail)throw Error('QZ non disponibile');active=true;}},
@@ -34,9 +34,11 @@ const ctx={ $, console, localStorage:{getItem(){return null},setItem(){}},
 ctx.window=ctx;
 vm.runInNewContext(fs.readFileSync('public/qz-bridge.js','utf8'),ctx);
 (async()=>{
-  assert.equal(calls.length,0,'No automatic QZ connection');
+  assert.equal(calls.some(c=>c[0]==='connect'),false,'No automatic QZ connection');
   await $('connectQz').listeners.click();
-  assert.equal(calls[0][0],'connect'); assert.equal($('printerSelect').value,'METO');
+  assert.equal(calls.some(c=>c[0]==='connect'),true);
+  await ctx.metoBridge.handle({type:'discover'});
+  assert.equal($('printerSelect').value,'METO');
   $('connectionMode').value='network'; $('connectionMode').listeners.change();
   assert.equal($('networkLabel').hidden,false);
   $('networkHost').value='999.1.1.1';

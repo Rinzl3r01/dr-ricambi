@@ -44,6 +44,11 @@
             <select id="connectionMode"><option value="system">Stampante del PC</option><option value="network">Stampante di rete (ZPL)</option></select>
             <label id="networkLabel" hidden>Indirizzo IP stampante<input id="networkHost" placeholder="10.0.0.28" maxlength="253"></label>
             <button id="connectQz" type="button">Collega QZ Tray</button>
+            <button id="testNetworkIp" type="button" class="ghost" hidden>Verifica IP senza stampare</button>
+            <p class="hint" id="qzStatus" role="status" aria-live="polite">Collega QZ Tray per stampare</p>
+            <p class="hint" id="qzPermission" aria-live="polite"></p>
+            <p class="hint">Se richiesto, autorizza l’accesso alle app del dispositivo e conferma in QZ Tray.</p>
+            <a href="/" target="_blank" rel="noopener" class="hint">Apri METO in una scheda separata</a>
             <label>Etichettatrice</label>
           <div class="inline">
             <select id="printerSelect"></select>

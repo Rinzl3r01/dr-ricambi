@@ -21,10 +21,10 @@ export default {
       response = await env.ASSETS.fetch(request);
     }
     const headers = new Headers(response.headers);
-    headers.set("Content-Security-Policy", `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' wss://localhost:* wss://localhost.qz.io:* ws://localhost:* ws://localhost.qz.io:*; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors ${origins.length ? origins.join(" ") : "'none'"}`);
+    headers.set("Content-Security-Policy", `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://localhost:8181 wss://localhost:* wss://localhost.qz.io:* ws://localhost:* ws://localhost.qz.io:*; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors ${origins.length ? origins.join(" ") : "'none'"}`);
     headers.set("X-Content-Type-Options", "nosniff");
     headers.set("Referrer-Policy", "no-referrer");
-    headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), loopback-network=(self), local-network-access=(self)");
     if (url.pathname === "/" || url.pathname.endsWith(".html") || url.pathname.endsWith(".js")) headers.set("Cache-Control", "no-cache");
     return new Response(request.method === "HEAD" ? null : response.body, { status: response.status, headers });
   },

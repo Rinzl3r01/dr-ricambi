@@ -3,7 +3,7 @@
   <t t-name="meto_label_editor.Editor">
     <div class="d-flex flex-column h-100 w-100">
       <div t-if="state.error" class="alert alert-warning m-2" role="alert"><t t-esc="state.error"/></div>
-      <iframe t-if="state.url" t-ref="editor" t-att-src="state.url" t-on-load="onFrameLoad" title="METO Label Editor" referrerpolicy="no-referrer" style="width:100%;min-height:650px;flex:1;border:0;"/>
+      <iframe t-if="state.url" t-ref="editor" t-att-src="state.url" t-on-load="onFrameLoad" title="METO Label Editor" allow="loopback-network https://meto-label-editor.ecommerce-d86.workers.dev; local-network-access https://meto-label-editor.ecommerce-d86.workers.dev" referrerpolicy="no-referrer" style="width:100%;min-height:650px;flex:1;border:0;"/>
     </div>
   </t>
 </templates>
