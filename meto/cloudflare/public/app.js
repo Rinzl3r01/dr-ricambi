@@ -1039,7 +1039,7 @@ function updatePrinters(printers) {
   (printers || []).forEach((printer) => {
     const option = document.createElement("option");
     option.value = printer.ip;
-    option.textContent = `${printer.name} - ${printer.ip}`;
+    option.textContent = printer.name === printer.ip ? printer.name : `${printer.name} - ${printer.ip}`;
     select.appendChild(option);
   });
   if (previous) select.value = previous;

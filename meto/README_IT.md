@@ -43,3 +43,6 @@ Fabric.js 5.3.0, JsBarcode 3.12.1, QRCode dalla distribuzione METO originale; QZ
 Modulo 19.0.3.1.0 installato: delega esplicita del permesso di rete locale all’iframe Cloudflare. Aggiunti verifica HTTPS locale, stato visibile e scadenza della connessione, pulsante Verifica IP senza stampare e ricerca sui soli indirizzi configurati (nessuna scansione dell’intera rete). La ricerca PC usa le stampanti installate; la ricerca rete verifica TCP 9100 senza inviare dati di stampa.
 
 Superati 12 test automatici. QZ Tray 2.2.5 risponde sul PC e la porta della stampante risponde. Nel browser di collaudo il permesso locale risulta ancora da autorizzare e la connessione non è confermata: stampa fisica ancora da verificare. Non vengono disabilitate protezioni o conferme QZ.
+
+
+Aggiornamento elenco stampanti: Cerca PC mostra solo code con METO, Zebra, ZDesigner o ZPL nel nome; esclude code virtuali, elimina duplicati e nomi ripetuti. Il filtro identifica le code configurate per nome e non certifica il linguaggio del dispositivo. Superati 14 test automatici, nessuna stampa inviata.

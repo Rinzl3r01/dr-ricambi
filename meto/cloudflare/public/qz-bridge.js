@@ -4,6 +4,13 @@
   let connecting = null;
   let printing = false;
   let discovering = false;
+  let systemPrinters = new Set();
+  // Names identify the configured METO/Zebra queues; discovery does not send
+  // commands to a device or claim to detect its active printer language.
+  function isLabelPrinter(name) {
+    return typeof name === "string" && /(?:^|[^a-z0-9])(meto|zebra|zdesigner|zpl)(?=$|[^a-z0-9])/i.test(name)
+      && !/pdf|onenote|anydesk|xps|fax/i.test(name);
+  }
   const knownIps = ["10.0.0.28", "10.0.0.31", "10.0.0.39", "10.0.0.41", "10.0.0.45", "10.0.0.46", "10.0.0.47"];
   const mode = $("connectionMode");
   const host = $("networkHost");
@@ -114,10 +121,11 @@
       setStatus(found.length ? `Rete: ${found.length} indirizzi con porta 9100 raggiungibile. Seleziona quello dell’etichettatrice.` : "Nessuna connessione confermata agli IP METO configurati. Controlla indirizzo, rete e autorizzazioni QZ; un rifiuto o timeout non prova che la stampante sia spenta.");
       return;
     }
-    const names = await qz.printers.find();
+    const names = [...new Set((await qz.printers.find()).filter(isLabelPrinter))];
+    systemPrinters = new Set(names);
     updatePrinters(names.map(name => ({ name, ip: name })));
     if (!$("printerSelect").value && names.length) $("printerSelect").selectedIndex = 0;
-    setStatus(names.length ? "QZ Tray collegato. Stampanti del PC: " + names.length : "Nessuna stampante configurata sul PC. Puoi usare un IP di rete.");
+    setStatus(names.length ? "QZ Tray collegato. Etichettatrici METO / Zebra / ZPL: " + names.length : "Nessuna etichettatrice METO / Zebra / ZPL trovata. Controlla il nome della coda sul PC oppure usa un IP di rete.");
     } finally { discovering = false; $("discoverBtn").disabled = false; mode.disabled = false; }
   }
   function networkHost() {
@@ -149,6 +157,7 @@
     try {
       const target = mode.value === "network" ? { host: networkHost(), port: 9100 } : $("printerSelect").value;
       if (!target) throw new Error("Seleziona una stampante");
+      if (mode.value !== "network" && !systemPrinters.has(target)) throw new Error("Cerca e seleziona un’etichettatrice METO / Zebra / ZPL");
       await connect();
       const zpl = await makeZpl(payload);
       setStatus("Invio stampa: conferma l'autorizzazione QZ Tray se richiesta");
