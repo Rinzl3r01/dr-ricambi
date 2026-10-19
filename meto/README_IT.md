@@ -1,50 +1,39 @@
-# METO Label Editor — integrazione Odoo 19 + Cloudflare
+# METO Label Editor — Odoo 19, Cloudflare e QZ Tray
 
-METO serve a comporre e stampare etichette per ricambi: testo, SKU, barcode, QR, immagini, linee e riquadri. L'editor deriva dal progetto Windows dell'utente; la nuova versione usa il browser e QZ Tray sul PC.
+METO compone e stampa etichette per ricambi con testo, SKU, barcode, QR, immagini, linee e riquadri. L'editor gira nel browser ed è distribuito da Cloudflare; QZ Tray sul PC invia la stampa.
 
-## Architettura
-- `cloudflare/`: editor HTML/JS/CSS, conversione ZPL nel browser, Worker per configurazione e intestazioni di sicurezza.
-- `meto_label_editor/`: piccolo addon Odoo 19, icona METO e Azioni > Apri in METO nei prodotti/varianti.
-- Il controller Python resta in Odoo e legge solo l'URL configurato; non esegue editor o stampa. Non serve un backend Python Cloudflare per le funzioni attuali.
-- I dati prodotto sono letti con il servizio ORM dell'utente Odoo e passati direttamente al riquadro Cloudflare tramite postMessage, controllando origine, finestra e canale casuale. Non sono inseriti negli URL o inviati alle API del Worker.
-- QZ gira sul PC e raggiunge stampanti locali/raw o IP:9100. Il server Odoo e Cloudflare non devono accedere alla LAN.
+## Stato verificato il 19 ottobre 2026
+- Editor online: https://meto-label-editor.ecommerce-d86.workers.dev
+- Modulo importabile `meto_label_editor` versione 19.0.3.0.0 installato/aggiornato su https://drricambi.it tramite Applicazioni > Importa modulo.
+- Apertura dall'icona METO verificata: l'iframe carica Cloudflare, senza errore 404.
+- Apertura da un prodotto esistente > Azioni > Apri in METO verificata: nome e codice articolo ricevuti nel canvas e nel campo Codici. Nessuna modifica alla scheda prodotto, nessuna stampa inviata.
+- La stampa fisica deve ancora essere provata sulla postazione con QZ Tray.
 
-## Configurare e distribuire Cloudflare
-1. In `cloudflare/wrangler.jsonc`, impostare `vars.ODOO_ORIGINS` con l'origine HTTPS reale di Odoo, ad esempio `https://odoo.azienda.it` (esempio, non un dominio già configurato). Per staging e produzione separare le origini con virgola. Nessun asterisco o percorso.
-2. Nella directory `cloudflare`: `npm install`, `npx wrangler login`, poi `npm run deploy`. Il primo accesso va completato dal proprietario dell'account.
-3. Annotare l'URL HTTPS effettivamente restituito da Cloudflare. La versione standalone funziona anche senza ODOO_ORIGINS; l'incorporamento è bloccato finché non si configura l'origine.
-4. Impostare un dominio dedicato, se desiderato, tramite Cloudflare e usare quello anche in Odoo.
+## Integrazione importabile, senza controller Python
+L'addon contiene metadata, XML e JavaScript. `__init__.py` è vuoto; non sono presenti controller o modelli Python personalizzati. Odoo supporta questi moduli dati importabili via ZIP, quindi non serve caricare Python aggiuntivo sul server o riavviarlo.
+Il JavaScript legge i prodotti mediante il servizio ORM dell'utente Odoo e rispetta i suoi permessi. I dati passano direttamente dal browser Odoo all'iframe Cloudflare con postMessage: sono verificati origine, finestra e canale casuale. Non vengono messi nell'URL o inviati alle API del Worker.
+L'origine dell'editor è nel file `meto_label_editor/static/src/action.js`. Non servono parametri di sistema o chiamate a /meto/editor e /meto/config. Eventuali parametri creati per le precedenti versioni non sono usati.
 
-## Installare stabilmente in Odoo (Stefano)
-1. Aggiungere l'intera directory `meto_label_editor` agli addon effettivamente caricati dal server Odoo 19.
-2. Riavviare i processi Odoo e installare/aggiornare l'addon. L'importazione ZIP dall'interfaccia non sostituisce il deploy del codice Python.
-3. In Impostazioni > Tecnico > Parametri di sistema creare `meto_label_editor.editor_url` con l'origine HTTPS effettiva dell'editor (senza percorsi, query o credenziali).
-4. Se esiste una CSP aziendale sul dominio Odoo, consentire l'origine Cloudflare in frame-src. Non disabilitare globalmente le protezioni.
-5. Aprire METO, poi una variante prodotto > Azioni > Apri in METO; verificare nome, SKU e barcode nel campo Codici. Il barcode si aggiunge esplicitamente con Aggiungi codice.
-6. Avviare QZ Tray sul PC, premere Collega QZ Tray e autorizzare. Provare prima Scarica ZPL, poi una sola etichetta fisica.
+## Installare o aggiornare
+1. Creare uno ZIP con la directory radice `meto_label_editor`, mantenendo il nome tecnico esistente.
+2. In Odoo, modalità sviluppatore > Applicazioni > Importa modulo, caricare lo ZIP e premere Installa. Non occorre disinstallare prima. Non caricare dati demo.
+3. Ricaricare Odoo e aprire METO. Per un prodotto usare Azioni > Apri in METO. Il barcode, se presente, è proposto nel campo Codici; va aggiunto esplicitamente dall'utente.
+4. Avviare QZ Tray sul PC, collegarlo dall'editor e selezionare una stampante compatibile raw/ZPL o IPv4:9100. Provare prima Scarica ZPL e poi una sola etichetta.
+Il server con accesso al filesystem può anche distribuire lo stesso addon via Git. La modifica non richiede di unire i vecchi addon storici a una versione Odoo diversa: Stefano deve confermare il repository di produzione effettivo.
 
-Se il vecchio addon è già installato, mantenere il nome tecnico `meto_label_editor` e aggiornarlo alla versione 19.0.2.0.0. La nuova azione non usa `/meto/editor`, che restituiva 404 se il controller non veniva caricato.
+## Cloudflare
+`meto/cloudflare` contiene il progetto Worker con asset statici. Da questa directory: `npm ci`, `npm run check`, `npm run deploy` con accesso Cloudflare autorizzato. `wrangler.jsonc` consente l'incorporamento da https://drricambi.it; aggiungere soltanto eventuali origini staging reali.
+Non è necessario eseguire Python su Cloudflare: disegno e conversione ZPL sono JavaScript nel browser. Il Worker serve configurazione e intestazioni CSP, non proxy al database Odoo.
 
 ## Funzioni e limiti
-Formati 55×25, 70×30 e 100×100 mm; 203 dpi; correzione di 3 mm a destra su 70×30 come nell'originale. Code128, Code39, EAN-13 e QR. Immagini con soglia/dithering, testo diretto, allineamento, margini, ridimensionamento oggetti, annulla/ripristina. Download ZPL senza stampa.
-Le stampanti devono accettare ZPL e i driver del PC raw. QZ usa conferme di sicurezza: la firma per stampa senza conferme non è inclusa e richiede certificato e un servizio di firma protetto. Non conservare mai chiavi private negli asset pubblici.
-Non viene salvato un archivio etichette nel database. L'editor pubblico non contiene segreti o dati prodotto precaricati. Se si desidera limitare anche l'accesso al solo editor, valutare Cloudflare Access con attenzione all'autenticazione nei riquadri cross-site.
+Formati 55×25, 70×30 e 100×100 mm a 203 dpi, correzione 3 mm a destra per 70×30; testo e oggetti modificabili, Code128/Code39/EAN-13/QR, foto con soglia/dithering, annulla/ripristina e download ZPL. Nessun archivio persistente delle etichette.
+La stampa QZ usa conferme di autorizzazione; firma e certificato per stampa senza conferme non sono inclusi. Mai inserire chiavi private negli asset pubblici. Le stampanti devono accettare ZPL, i driver locali raw.
 
-## Validazione
-Eseguire `cd cloudflare && npm run check` per Worker e protocollo. Test ZPL di regressione nella cartella cloudflare/tests. Verificare installazione su staging Odoo 19 e QZ sul PC prima della produzione: il repository pubblico di Stefano contiene addon storici, non prova che master sia collegato al server corrente.
-Gli screenshot sono anteprime reali del frontend locale con dati dimostrativi, non prove di installazione sul server o di stampa fisica.
-
-## Componenti terzi
-Fabric.js 5.3.0, JsBarcode 3.12.1, QRCode dalla distribuzione METO originale; QZ JS 2.2.5 dall'installazione locale. Conservare avvisi e licenze. QZ_LICENSE.txt è incluso.
-
-## Anteprime
+## Verifiche
+Test automatici Worker, protocollo di messaggi e raster ZPL superati; parsing XML e sintassi JS; importazione e apertura effettive su Odoo verificate. Gli screenshot seguenti usano dati dimostrativi dell'anteprima locale. Il test reale di un prodotto è documentato localmente senza pubblicare dati della base Odoo.
 
 ![Testo e barcode](docs/screenshots/01-editor-barcode.jpg)
 
 ![QR e stampa di rete](docs/screenshots/02-qr-stampa-rete.jpg)
 
-## Distribuzione disponibile
-
-Editor pubblicato: https://meto-label-editor.ecommerce-d86.workers.dev
-
-Parametro Odoo `meto_label_editor.editor_url`: `https://meto-label-editor.ecommerce-d86.workers.dev`. Origine autorizzata: `https://drricambi.it`. Versione Cloudflare: `6e5e63c6-9c8e-4915-8804-611244b3d252`. Il deploy non installa automaticamente l’addon sul server Odoo.
+Fabric.js 5.3.0, JsBarcode 3.12.1, QRCode dalla distribuzione METO originale; QZ JS 2.2.5 dall'installazione locale. Avvisi e QZ_LICENSE.txt conservati.

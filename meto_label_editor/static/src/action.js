@@ -1,7 +1,6 @@
 /** @odoo-module **/
 import { Component, onWillStart, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
 export class MetoEditor extends Component {
@@ -30,8 +29,7 @@ export class MetoEditor extends Component {
         };
         onWillStart(async () => {
             try {
-                const config = await rpc("/meto/config", {});
-                const url = new URL(config.editor_url);
+                const url = new URL("https://meto-label-editor.ecommerce-d86.workers.dev/");
                 if (url.protocol !== "https:") throw new Error("L’editor METO richiede HTTPS");
                 this.origin = url.origin;
                 url.searchParams.set("channel", this.channel);
