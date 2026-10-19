@@ -42,3 +42,9 @@ Fabric.js 5.3.0, JsBarcode 3.12.1, QRCode dalla distribuzione METO originale; QZ
 ![Testo e barcode](docs/screenshots/01-editor-barcode.jpg)
 
 ![QR e stampa di rete](docs/screenshots/02-qr-stampa-rete.jpg)
+
+## Distribuzione disponibile
+
+Editor pubblicato: https://meto-label-editor.ecommerce-d86.workers.dev
+
+Parametro Odoo `meto_label_editor.editor_url`: `https://meto-label-editor.ecommerce-d86.workers.dev`. Origine autorizzata: `https://drricambi.it`. Versione Cloudflare: `6e5e63c6-9c8e-4915-8804-611244b3d252`. Il deploy non installa automaticamente l’addon sul server Odoo.
