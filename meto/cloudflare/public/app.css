@@ -1,0 +1,426 @@
+:root {
+  --green: #145f3b;
+  --green-2: #0d472c;
+  --ink: #07140d;
+  --muted: #607066;
+  --line: #d8e0da;
+  --paper: #fff;
+  --wash: #edf2ee;
+  --soft: #f7faf8;
+  --danger: #9c2f2f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(20,95,59,.12), transparent 32rem),
+    linear-gradient(135deg, #edf2ee, #f8faf8 50%, #e7efe9);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(340px, 420px) 1fr;
+  gap: 18px;
+  height: 100vh;
+  padding: 18px;
+}
+
+.sidebar, .topbar, .canvas-card, .status-card {
+  background: rgba(255,255,255,.92);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 45px rgba(8, 42, 24, .08);
+}
+
+.sidebar {
+  border-radius: 22px;
+  padding: 20px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(20,95,59,.42) transparent;
+}
+
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(20,95,59,.35);
+  border-radius: 999px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 8px 14px rgba(6, 40, 22, .16));
+}
+
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 27px; letter-spacing: -.03em; }
+h2 { font-size: 31px; letter-spacing: -.035em; }
+h3 { font-size: 16px; margin: 16px 0 10px; }
+.brand p, .topbar p, .hint { color: var(--muted); }
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--soft);
+  padding: 14px;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #e9efeb;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 9px;
+}
+
+.tab.active {
+  background: white;
+  color: var(--green);
+  box-shadow: 0 5px 16px rgba(20,95,59,.12);
+}
+
+.tab-page { display: none; }
+.tab-page.active { display: block; }
+
+label {
+  display: block;
+  margin: 12px 0 7px;
+  font-weight: 800;
+}
+
+input, select, textarea, button {
+  font: inherit;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #c9d3cc;
+  border-radius: 10px;
+  background: white;
+  padding: 10px 11px;
+  outline-color: var(--green);
+}
+
+textarea {
+  min-height: 155px;
+  padding: 0;
+  resize: none;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  white-space: pre-wrap;
+}
+
+.direct-edit-hint {
+  display: grid;
+  gap: 6px;
+  border: 1px dashed rgba(20,95,59,.35);
+  border-radius: 14px;
+  background: #f4faf6;
+  color: var(--muted);
+  padding: 13px 14px;
+  line-height: 1.35;
+}
+
+.direct-edit-hint strong {
+  color: var(--green);
+}
+
+.hidden-text-storage {
+  display: none;
+}
+
+button {
+  border: 1px solid #bdc8c0;
+  background: white;
+  border-radius: 10px;
+  padding: 10px 13px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+button:hover {
+  border-color: var(--green);
+  background: #eef8f1;
+}
+
+.inline { display: flex; gap: 8px; align-items: center; }
+.inline select { min-width: 0; }
+.compact input { max-width: 105px; text-align: right; }
+.unit { color: var(--muted); font-weight: 800; }
+.check { display: flex; gap: 8px; align-items: center; font-weight: 700; }
+.check input { width: auto; }
+
+.font-row {
+  display: grid;
+  grid-template-columns: 1fr 74px 74px;
+  gap: 9px;
+  align-items: center;
+}
+
+.align-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.align-grid span {
+  display: block;
+  color: var(--muted);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.button-group button {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.button-group button.active {
+  background: #e6f5eb;
+  color: var(--green);
+  border-color: var(--green);
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.danger { color: var(--danger); }
+
+.image-tool {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.image-tool h3 {
+  margin-top: 0;
+}
+
+.image-tool button {
+  width: 100%;
+}
+
+.image-tool input[type="range"] {
+  padding: 0;
+}
+
+.context-menu {
+  position: fixed;
+  z-index: 100;
+  min-width: 150px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 18px 45px rgba(8, 42, 24, .16);
+}
+
+.context-menu button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+}
+
+.context-menu button:hover {
+  background: #fff1f1;
+}
+
+.prop-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+}
+
+.hint {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.status-card {
+  margin-top: 14px;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.status-card strong {
+  display: block;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 22px;
+  padding: 20px 24px;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.print {
+  min-width: 150px;
+  background: var(--green);
+  color: white;
+  border-color: var(--green-2);
+}
+
+.print:hover {
+  background: var(--green-2);
+}
+
+.ghost {
+  background: #f8fbf9;
+}
+
+.canvas-card {
+  border-radius: 22px;
+  padding: 24px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.canvas-wrap {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(20,95,59,.035) 1px, transparent 1px),
+    linear-gradient(rgba(20,95,59,.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border-radius: 18px;
+}
+
+.canvas-container {
+  box-shadow: 0 25px 50px rgba(6, 40, 22, .14);
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 35% 20%, rgba(240,165,26,.20), transparent 22rem),
+    radial-gradient(circle at 65% 75%, rgba(20,95,59,.24), transparent 26rem),
+    linear-gradient(135deg, #e9f0eb, #f8fbf8);
+  transition: opacity .35s ease, visibility .35s ease;
+}
+
+.splash-card {
+  min-width: 360px;
+  display: grid;
+  grid-template-columns: 72px 1fr 44px;
+  gap: 18px;
+  align-items: center;
+  padding: 24px;
+  border-radius: 26px;
+  background: rgba(255,255,255,.86);
+  border: 1px solid rgba(216,224,218,.96);
+  box-shadow: 0 30px 80px rgba(6,40,22,.16);
+  backdrop-filter: blur(16px);
+}
+
+.splash-card img {
+  width: 72px;
+  height: 72px;
+}
+
+.splash-card strong {
+  display: block;
+  font-size: 26px;
+  letter-spacing: -.03em;
+}
+
+.splash-card span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.splash-ring {
+  width: 38px;
+  height: 38px;
+  border: 4px solid #d8e0da;
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: splash-spin .8s linear infinite;
+}
+
+body.app-ready .splash {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes splash-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1050px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .sidebar {
+    max-height: none;
+  }
+}
+
+/* Web integration: retain METO palette, simplify containers. */
+body { background: var(--soft); }
+.app-shell { gap: 0; padding: 0; grid-template-columns: 350px 1fr; }
+.sidebar { border-radius: 0; box-shadow: none; border-right: 1px solid var(--line); overflow-y: auto; }
+.workspace { min-width: 0; overflow: auto; }
+.panel, .canvas-card, .status-card { box-shadow: none; border-radius: 6px; }
+button { border-radius: 6px; box-shadow: none; }
+[hidden] { display: none !important; }
+#splash { display: none; }
+@media (max-width: 800px) { .app-shell { grid-template-columns: 300px minmax(350px,1fr); overflow: auto; } }

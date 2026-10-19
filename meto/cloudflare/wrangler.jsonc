@@ -1,0 +1,16 @@
+{
+  "name": "meto-label-editor",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "vars": {
+    "ODOO_ORIGINS": "https://drricambi.it"
+  },
+  "observability": {
+    "enabled": false
+  }
+}

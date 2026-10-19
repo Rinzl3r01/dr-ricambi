@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="it">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>METO Label Editor</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="lib/fabric.min.js"></script>
+  <script src="lib/JsBarcode.all.min.js"></script>
+  <script src="lib/qrcode.min.js"></script>
+</head>
+<body>
+  <div id="splash" class="splash">
+    <div class="splash-card">
+      <img src="assets/meto-mark.svg" alt="METO Label Editor">
+      <div>
+        <strong>METO Label Editor</strong>
+        <span>Caricamento canvas professionale...</span>
+      </div>
+      <div class="splash-ring" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="assets/meto-mark.svg" alt="METO">
+        <div>
+          <h1>METO Label Editor</h1>
+          <p>Editor etichette</p>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="tabs">
+          <button class="tab active" data-tab="label">Etichetta</button>
+          <button class="tab" data-tab="objects">Oggetti</button>
+          <button class="tab" data-tab="codes">Codici</button>
+        </div>
+
+        <div class="tab-page active" id="tab-label">
+          <label>Collegamento stampa</label>
+            <select id="connectionMode"><option value="system">Stampante del PC</option><option value="network">Stampante di rete (ZPL)</option></select>
+            <label id="networkLabel" hidden>Indirizzo IP stampante<input id="networkHost" placeholder="10.0.0.28" maxlength="253"></label>
+            <button id="connectQz" type="button">Collega QZ Tray</button>
+            <label>Etichettatrice</label>
+          <div class="inline">
+            <select id="printerSelect"></select>
+            <button id="discoverBtn" class="ghost">Cerca</button>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="defaultPrinter">
+            Usa come predefinita
+          </label>
+
+          <label>Formato etichetta</label>
+          <select id="presetSelect">
+            <option value="55x25">55 x 25 mm</option>
+            <option value="70x30">70 x 30 mm</option>
+            <option value="100x100">100 x 100 mm</option>
+          </select>
+
+          <label>Testo principale</label>
+          <div class="direct-edit-hint">
+            <strong>Scrivi direttamente nella preview.</strong>
+            <span>Clicca l'etichetta bianca a destra e digita: il testo che vedi e quello stampato sono lo stesso oggetto.</span>
+          </div>
+          <textarea id="mainText" class="hidden-text-storage" spellcheck="false" aria-hidden="true"></textarea>
+
+          <label>Grandezza testo</label>
+          <div class="font-row">
+            <input id="fontRange" type="range" min="8" max="999" value="28">
+            <input id="fontNumber" type="number" min="8" max="999" value="28">
+            <button id="maxTextBtn">Max</button>
+          </div>
+
+          <div class="align-grid">
+            <div>
+              <span>Orizzontale</span>
+              <div class="button-group" id="hAlign">
+                <button data-align="left" class="active" title="Allinea a sinistra">☰</button>
+                <button data-align="center" title="Centra orizzontalmente">≡</button>
+                <button data-align="right" title="Allinea a destra">☷</button>
+              </div>
+            </div>
+            <div>
+              <span>Verticale</span>
+              <div class="button-group" id="vAlign">
+                <button data-align="top" class="active" title="Allinea in alto">▔</button>
+                <button data-align="middle" title="Centra verticalmente">─</button>
+                <button data-align="bottom" title="Allinea in basso">▁</button>
+              </div>
+            </div>
+          </div>
+
+          <label>Margine unico</label>
+          <div class="inline compact">
+            <button id="marginMinus" class="ghost">-</button>
+            <input id="marginMm" type="number" step="0.5" min="0" max="20" value="0">
+            <span class="unit">mm</span>
+            <button id="marginPlus" class="ghost">+</button>
+          </div>
+        </div>
+
+        <div class="tab-page" id="tab-objects">
+          <div class="action-grid">
+            <button id="addTextBox">Riquadro testo</button>
+            <button id="addLine">Linea</button>
+            <button id="deleteObject" class="danger">Rimuovi</button>
+          </div>
+
+          <div class="image-tool">
+            <h3>Foto</h3>
+            <input id="photoFile" type="file" accept="image/*" hidden>
+            <button id="pickPhoto">Inserisci foto ottimizzata</button>
+            <label>Soglia bianco/nero <input id="photoThreshold" type="range" min="30" max="225" value="138"></label>
+            <label class="check">
+              <input type="checkbox" id="photoDither" checked>
+              Dithering per foto e loghi sfumati
+            </label>
+            <label class="check">
+              <input type="checkbox" id="photoInvert">
+              Inverti bianco/nero
+            </label>
+          </div>
+
+          <div class="properties">
+            <h3>Proprietà selezione</h3>
+            <div class="prop-grid">
+              <label>X <input id="propX" type="number" step="0.1"></label>
+              <label>Y <input id="propY" type="number" step="0.1"></label>
+              <label>W <input id="propW" type="number" step="0.1"></label>
+              <label>H/L <input id="propH" type="number" step="0.1"></label>
+              <label>Font <input id="propFont" type="number" step="1" min="6" max="999"></label>
+              <label>Linea <input id="propStroke" type="number" step="0.1" min="0.1" max="10"></label>
+            </div>
+            <p class="hint">Gli oggetti si selezionano direttamente sul canvas. Usa i quadratini Fabric per ridimensionare.</p>
+          </div>
+        </div>
+
+        <div class="tab-page" id="tab-codes">
+          <label>Valore codice</label>
+          <input id="codeValue" placeholder="Testo, SKU, URL o numero">
+          <label>Tipo</label>
+          <select id="codeType">
+            <option>Code 128</option>
+            <option>Code 39</option>
+            <option>EAN-13</option>
+            <option>QR Code</option>
+          </select>
+          <button id="addCode">Aggiungi codice</button>
+          <button id="deleteCodeObject" class="danger ghost">Elimina selezionato</button>
+        </div>
+      </section>
+
+      <div class="status-card">
+        <strong>Stato</strong>
+        <span id="statusText">QZ Tray non collegato</span>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <h2>Canvas etichetta</h2>
+          <p id="canvasMeta">55 x 25 mm | 203 dpi | QZ Tray</p>
+        </div>
+        <div class="top-actions">
+          <button id="fitBtn" class="ghost" title="Ricentra la vista del canvas">Centra</button>
+          <button id="exportZpl" class="ghost">Scarica ZPL</button>
+          <button id="printBtn" class="print">Stampa</button>
+        </div>
+      </header>
+
+      <section class="canvas-card">
+        <div class="canvas-wrap">
+          <canvas id="labelCanvas"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <canvas id="barcodeScratch" hidden></canvas>
+  <canvas id="photoScratch" hidden></canvas>
+  <div id="qrScratch" hidden></div>
+  <div id="objectContextMenu" class="context-menu" hidden>
+    <button id="contextDeleteObject" class="danger">Elimina</button>
+  </div>
+  <script src="lib/qz-tray.js"></script>
+  <script src="zpl.js"></script>
+  <script src="app.js?v=19.0.1.0.1"></script>
+  <script src="qz-bridge.js"></script>
+  <script src="odoo-bridge.js"></script>
+</body>
+</html>
