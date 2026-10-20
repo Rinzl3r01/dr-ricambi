@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="model_qz_configuration" model="ir.model">
+    <field name="name">METO QZ configuration</field><field name="model">x_meto_qz_configuration</field><field name="state">manual</field>
+  </record>
+  <record id="field_qz_activation_code" model="ir.model.fields">
+    <field name="name">x_activation_code</field><field name="field_description">METO enrollment code</field><field name="model_id" ref="model_qz_configuration"/><field name="ttype">char</field><field name="state">manual</field><field name="copied" eval="False"/>
+  </record>
+  <record id="access_qz_configuration_user" model="ir.model.access">
+    <field name="name">METO configuration: internal read</field><field name="model_id" ref="model_qz_configuration"/><field name="group_id" ref="base.group_user"/><field name="perm_read" eval="True"/><field name="perm_write" eval="False"/><field name="perm_create" eval="False"/><field name="perm_unlink" eval="False"/>
+  </record>
+  <record id="access_qz_configuration_admin" model="ir.model.access">
+    <field name="name">METO configuration: admin</field><field name="model_id" ref="model_qz_configuration"/><field name="group_id" ref="base.group_system"/><field name="perm_read" eval="True"/><field name="perm_write" eval="True"/><field name="perm_create" eval="True"/><field name="perm_unlink" eval="True"/>
+  </record>
+</odoo>

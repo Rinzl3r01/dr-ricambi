@@ -32,6 +32,11 @@
         </div>
       </div>
 
+      <div class="certificate-mini" aria-label="Certificato QZ Tray">
+        <div><strong>QZ Tray</strong><button id="certificateSetup" class="ghost" type="button">Certificato</button></div>
+        <p id="certificateState" role="status">Verifica firma…</p>
+      </div>
+
       <section class="panel">
         <div class="tabs">
           <button class="tab active" data-tab="label">Etichetta</button>
@@ -40,7 +45,8 @@
         </div>
 
         <div class="tab-page active" id="tab-label">
-          <label>Collegamento stampa</label>
+          <details class="print-settings" id="connectionSettings"><summary>Collegamento stampa</summary>
+          <div class="settings-body"><label for="connectionMode">Tipo di collegamento</label>
             <select id="connectionMode"><option value="system">Stampante del PC</option><option value="network">Stampante di rete (ZPL)</option></select>
             <label id="networkLabel" hidden>Indirizzo IP stampante<input id="networkHost" placeholder="10.0.0.28" maxlength="253"></label>
             <button id="connectQz" type="button">Collega QZ Tray</button>
@@ -49,7 +55,9 @@
             <p class="hint" id="qzPermission" aria-live="polite"></p>
             <p class="hint">Se richiesto, autorizza l’accesso alle app del dispositivo e conferma in QZ Tray.</p>
             <a href="/" target="_blank" rel="noopener" class="hint">Apri METO in una scheda separata</a>
-            <label>Etichettatrice</label>
+          </div></details>
+          <details class="print-settings" id="printerSettings"><summary>Etichettatrice</summary>
+          <div class="settings-body">
           <div class="inline">
             <select id="printerSelect"></select>
             <button id="discoverBtn" class="ghost">Cerca</button>
@@ -59,6 +67,7 @@
             Usa come predefinita
           </label>
 
+          </div></details>
           <label>Formato etichetta</label>
           <select id="presetSelect">
             <option value="55x25">55 x 25 mm</option>
@@ -178,23 +187,19 @@
         </div>
       </header>
 
-      <section class="certificate-panel" aria-label="Certificato QZ Tray">
-        <div><strong>Certificato QZ Tray</strong><p id="certificateState">Verifica della firma Cloudflare…</p></div>
-        <button id="certificateSetup" class="ghost">Installa certificato</button>
-      </section>
       <dialog id="certificateDialog" aria-labelledby="certificateTitle">
         <h2 id="certificateTitle">Configura il certificato METO</h2>
         <p><strong id="certificateServerState">Certificato METO valido fino al 20 ottobre 2040. Attiva la firma Cloudflare per questo browser.</strong></p>
-        <div class="certificate-activation">
+        <details class="certificate-activation"><summary>Attivazione manuale (assistenza)</summary>
           <label for="certificateCode">Codice di attivazione riservato METO</label>
           <input id="certificateCode" type="password" autocomplete="off" spellcheck="false">
           <button id="activateCertificate">Attiva questo browser</button>
           <p id="certificateActivationStatus" role="status">La sessione dura 30 giorni. Attiva dall’interno di Odoo se usi METO lì.</p>
-        </div>
+        </details>
         <p><a href="certificate/meto-qz-pc.zip" download>Scarica certificato e guida per questo PC</a></p>
         <p>Il pacchetto contiene solo il certificato pubblico METO. La configurazione QZ va eseguita dall’amministratore su ogni PC. Scaricare il pacchetto non installa certificati.</p>
         <ol>
-          <li>Inserisci il codice riservato per attivare la firma in questo browser.</li>
+          <li>Aprendo METO da Odoo, la firma viene attivata automaticamente per gli utenti interni autorizzati.</li>
           <li>Su ciascun PC si configura QZ Tray per riconoscere il certificato pubblico METO.</li>
           <li>Si riapre METO, si collega QZ e si conferma Allow con Remember this decision.</li>
         </ol>

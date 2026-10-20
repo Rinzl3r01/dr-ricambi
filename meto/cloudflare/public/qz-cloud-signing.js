@@ -27,8 +27,8 @@
   }
   async function refresh() {
     const status=await api("/api/qz/status");
-    if(status.authorized){configure();document.getElementById("certificateState").textContent="Firma Cloudflare attiva per questo browser. Configura il certificato in QZ Tray sul PC.";document.getElementById("certificateServerState").textContent="Firma Cloudflare attiva. Nessun modulo Python aggiuntivo richiesto su Odoo.";}
-    else {document.getElementById("certificateState").textContent="Firma Cloudflare pronta. Attiva questo browser dal pannello certificato.";}
+    if(status.authorized){configure();document.getElementById("certificateState").textContent="Firma attiva";document.getElementById("certificateServerState").textContent="Firma Cloudflare attiva. Nessun modulo Python aggiuntivo richiesto su Odoo.";}
+    else {document.getElementById("certificateState").textContent="Firma da attivare";}
     return status;
   }
   window.metoCloudSigning={get configured(){return configured;},ready:refresh().catch(()=>({authorized:false})),async activate(code){
@@ -36,4 +36,21 @@
     const status=await refresh();if(!status.authorized)throw Error("Il browser non conserva la sessione. Apri METO in una scheda separata e attivalo lì.");
     return status;
   }};
+  const channel=new URLSearchParams(location.search).get("channel");
+  if(window.parent!==window && channel) {
+    const origins=fetch("/config.json",{cache:"no-store"}).then(r=>r.json()).then(c=>c.odooOrigins);
+    let automaticActivation=null;
+    window.addEventListener("message",async event=>{
+      if(event.source!==window.parent || event.data?.type!=="meto:activate" || event.data.channel!==channel) return;
+      const allowed=await origins.catch(()=>[]);
+      if(!Array.isArray(allowed) || !allowed.includes(event.origin) || typeof event.data.code!=="string" || event.data.code.length<20 || event.data.code.length>128 || automaticActivation) return;
+      automaticActivation=(async()=>{
+        const status=await window.metoCloudSigning.ready;
+        if(!status.authorized) await window.metoCloudSigning.activate(event.data.code);
+        document.getElementById("certificateState").textContent="Firma attiva da Odoo";
+        window.parent.postMessage({type:"meto:activated",channel},event.origin);
+      })().catch(()=>{document.getElementById("certificateState").textContent="Attivazione automatica non disponibile";});
+    });
+    origins.then(allowed=>{for(const origin of allowed)window.parent.postMessage({type:"meto:activation-ready",channel},origin);}).catch(()=>{});
+  }
 })();

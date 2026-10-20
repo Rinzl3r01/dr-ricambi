@@ -1,3 +1,10 @@
+## Aggiornamento: attivazione automatica Odoo e sidebar compatta
+Modulo importabile aggiornato/installato alla versione 19.0.4.0.0. Il codice di attivazione è memorizzato nel solo database Odoo (`x_meto_qz_configuration`), non negli asset, nel repository, negli URL o negli ZIP pubblici. ACL: lettura agli utenti interni base.group_user; modifica solo agli amministratori base.group_system; nessun accesso assegnato a portale/pubblico. Il codice viene consegnato all’iframe configurato via postMessage con controlli origin, source e channel e attiva automaticamente la sessione Cloudflare. Gli utenti interni autorizzati possono leggere questo codice condiviso: non è un segreto contro tali utenti. Non è la chiave privata QZ, che rimane nei Secrets Cloudflare. La configurazione riservata iniziale non viene distribuita nella PR.
+
+Il riquadro certificato è piccolo nella sidebar; Collegamento stampa ed Etichettatrice sono sezioni native details/summary, inizialmente chiuse. Il canvas torna a occupare l’area centrale. Attivazione manuale mantenuta solo nel dettaglio di assistenza. Configurazione del certificato in QZ per ogni PC ancora necessaria; nessuna fiducia installata automaticamente.
+
+Verificati importazione live Odoo, sidebar e menu; 20 test frontend/Worker superati inclusi controlli attivazione automatica.
+
 ## Stato attuale: firma su Cloudflare
 La firma QZ è ora eseguita dal Worker Cloudflare: non serve installare il nuovo addon Python sul server Odoo. L’editor e il modulo Odoo importabile già installato restano utilizzabili. `meto_qz_signer` è un’alternativa opzionale, non necessaria per la configurazione corrente.
 
