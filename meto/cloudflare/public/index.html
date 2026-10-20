@@ -178,6 +178,23 @@
         </div>
       </header>
 
+      <section class="certificate-panel" aria-label="Certificato QZ Tray">
+        <div><strong>Certificato QZ Tray</strong><p>Configura questo PC per autorizzare le stampe METO.</p></div>
+        <button id="certificateSetup" class="ghost">Installa certificato</button>
+      </section>
+      <dialog id="certificateDialog" aria-labelledby="certificateTitle">
+        <h2 id="certificateTitle">Configura il certificato METO</h2>
+        <p><strong>Certificato e firma METO non ancora configurati sul server.</strong></p>
+        <p>Il certificato demo disponibile non contiene la chiave privata necessaria. Il pulsante non ha installato né modificato certificati sul PC.</p>
+        <ol>
+          <li>L’amministratore prepara il certificato METO e configura la firma sul server.</li>
+          <li>Su ciascun PC si configura QZ Tray per riconoscere il certificato pubblico METO.</li>
+          <li>Si riapre METO, si collega QZ e si conferma Allow con Remember this decision.</li>
+        </ol>
+        <p>La chiave privata rimane sul server. Non caricarla nel browser o nella cartella pubblica.</p>
+        <p>Fino al completamento della configurazione, lascia Remember this decision deselezionato e conferma le singole richieste.</p>
+        <button id="closeCertificateDialog">Chiudi</button>
+      </dialog>
       <section class="canvas-card">
         <div class="canvas-wrap">
           <canvas id="labelCanvas"></canvas>
@@ -196,6 +213,7 @@
   <script src="zpl.js"></script>
   <script src="app.js?v=19.0.1.0.1"></script>
   <script src="qz-bridge.js"></script>
+  <script src="certificate-setup.js"></script>
   <script src="odoo-bridge.js"></script>
 </body>
 </html>
