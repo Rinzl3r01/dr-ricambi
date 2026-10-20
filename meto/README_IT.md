@@ -49,7 +49,7 @@ Aggiornamento elenco stampanti: Cerca PC mostra solo code con METO, Zebra, ZDesi
 
 
 ## Certificato METO e firma QZ — 20 ottobre 2026
-Creato certificato autofirmato DR Ricambi - METO, valido fino al 19 ottobre 2029. Certificato pubblico e guida nel pannello Installa certificato, pacchetto `meto/cloudflare/public/certificate/meto-qz-pc.zip`. La chiave privata è custodita fuori dal repository e non è inclusa negli ZIP. Nessun certificato è stato installato nei PC.
+Creato certificato autofirmato DR Ricambi - METO, valido fino al 20 ottobre 2040. Certificato pubblico e guida nel pannello Installa certificato, pacchetto `meto/cloudflare/public/certificate/meto-qz-pc.zip`. La chiave privata è custodita fuori dal repository e non è inclusa negli ZIP. Nessun certificato è stato installato nei PC.
 
 Aggiunto addon opzionale `meto_qz_signer`: richiede installazione Python sul server Odoo da parte di Stefano, cryptography >=42, chiave privata trasferita separatamente, variabile di ambiente METO_QZ_PRIVATE_KEY e gruppo utenti dedicato. Il vecchio modulo XML resta utilizzabile; questo addon non si installa con Importa modulo. Il collegamento di firma usa RPC Odoo autenticata via parent con controlli origin/source/channel; nessun servizio anonimo Cloudflare firma richieste. Politica limitata a discovery, apertura/chiusura TCP ai sette IP METO e stampa raster ZPL a destinazioni autorizzate.
 
