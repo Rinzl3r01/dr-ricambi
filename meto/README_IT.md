@@ -46,3 +46,11 @@ Superati 12 test automatici. QZ Tray 2.2.5 risponde sul PC e la porta della stam
 
 
 Aggiornamento elenco stampanti: Cerca PC mostra solo code con METO, Zebra, ZDesigner o ZPL nel nome; esclude code virtuali, elimina duplicati e nomi ripetuti. Il filtro identifica le code configurate per nome e non certifica il linguaggio del dispositivo. Superati 14 test automatici, nessuna stampa inviata.
+
+
+## Certificato METO e firma QZ — 20 ottobre 2026
+Creato certificato autofirmato DR Ricambi - METO, valido fino al 19 ottobre 2029. Certificato pubblico e guida nel pannello Installa certificato, pacchetto `meto/cloudflare/public/certificate/meto-qz-pc.zip`. La chiave privata è custodita fuori dal repository e non è inclusa negli ZIP. Nessun certificato è stato installato nei PC.
+
+Aggiunto addon opzionale `meto_qz_signer`: richiede installazione Python sul server Odoo da parte di Stefano, cryptography >=42, chiave privata trasferita separatamente, variabile di ambiente METO_QZ_PRIVATE_KEY e gruppo utenti dedicato. Il vecchio modulo XML resta utilizzabile; questo addon non si installa con Importa modulo. Il collegamento di firma usa RPC Odoo autenticata via parent con controlli origin/source/channel; nessun servizio anonimo Cloudflare firma richieste. Politica limitata a discovery, apertura/chiusura TCP ai sette IP METO e stampa raster ZPL a destinazioni autorizzate.
+
+Verificati 15 test frontend/Worker e 5 test Python comprendenti firma reale e rifiuto di chiamate/destinazioni non consentite. Sintassi Python/XML verificata. Restano da collaudare installazione addon, RPC sul server reale, configurazione QZ dei PC e stampa firmata fisica. Il download pubblico non implica certificato installato o firma attiva.

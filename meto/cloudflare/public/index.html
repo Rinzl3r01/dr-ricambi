@@ -179,13 +179,14 @@
       </header>
 
       <section class="certificate-panel" aria-label="Certificato QZ Tray">
-        <div><strong>Certificato QZ Tray</strong><p>Configura questo PC per autorizzare le stampe METO.</p></div>
+        <div><strong>Certificato QZ Tray</strong><p id="certificateState">Certificato METO pronto. Attivazione della firma Odoo ancora necessaria.</p></div>
         <button id="certificateSetup" class="ghost">Installa certificato</button>
       </section>
       <dialog id="certificateDialog" aria-labelledby="certificateTitle">
         <h2 id="certificateTitle">Configura il certificato METO</h2>
-        <p><strong>Certificato e firma METO non ancora configurati sul server.</strong></p>
-        <p>Il certificato demo disponibile non contiene la chiave privata necessaria. Il pulsante non ha installato né modificato certificati sul PC.</p>
+        <p><strong id="certificateServerState">Certificato DR Ricambi – METO creato. Firma sul server Odoo da attivare.</strong></p>
+        <p><a href="certificate/meto-qz-pc.zip" download>Scarica certificato e guida per questo PC</a></p>
+        <p>Il pacchetto contiene solo il certificato pubblico METO. La configurazione QZ va eseguita dall’amministratore su ogni PC. Scaricare il pacchetto non installa certificati.</p>
         <ol>
           <li>L’amministratore prepara il certificato METO e configura la firma sul server.</li>
           <li>Su ciascun PC si configura QZ Tray per riconoscere il certificato pubblico METO.</li>
@@ -212,6 +213,7 @@
   <script src="lib/qz-tray.js"></script>
   <script src="zpl.js"></script>
   <script src="app.js?v=19.0.1.0.1"></script>
+  <script src="qz-signing.js"></script>
   <script src="qz-bridge.js"></script>
   <script src="certificate-setup.js"></script>
   <script src="odoo-bridge.js"></script>

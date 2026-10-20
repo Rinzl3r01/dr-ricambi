@@ -1,0 +1,1 @@
+{'name': 'METO QZ Signing', 'version': '19.0.1.0.0', 'depends': ['meto_label_editor'], 'license': 'LGPL-3', 'external_dependencies': {'python': ['cryptography']}, 'data': ['security/groups.xml'], 'installable': True, 'assets': {'web.assets_backend': ['meto_qz_signer/static/src/signing.js']}}
