@@ -12,5 +12,23 @@
   },
   "observability": {
     "enabled": false
-  }
+  },
+  "ratelimits": [
+    {
+      "name": "QZ_LOGIN_LIMITER",
+      "namespace_id": "2026102001",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    },
+    {
+      "name": "QZ_SIGN_LIMITER",
+      "namespace_id": "2026102002",
+      "simple": {
+        "limit": 120,
+        "period": 60
+      }
+    }
+  ]
 }

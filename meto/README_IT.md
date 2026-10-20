@@ -1,3 +1,12 @@
+## Stato attuale: firma su Cloudflare
+La firma QZ è ora eseguita dal Worker Cloudflare: non serve installare il nuovo addon Python sul server Odoo. L’editor e il modulo Odoo importabile già installato restano utilizzabili. `meto_qz_signer` è un’alternativa opzionale, non necessaria per la configurazione corrente.
+
+Il Worker custodisce QZ_PRIVATE_KEY, QZ_ENROLLMENT_CODE e QZ_SESSION_KEY come Secrets. Non inserire i valori nel repository o nei file pubblici. Ogni browser viene attivato con un codice riservato; sessione HttpOnly Secure SameSite=None Partitioned di 30 giorni, limitata al contesto browser/Odoo. Origine esatta richiesta per POST JSON, limite di tentativi e frequenza delle firme, richieste recenti, soli IP e stampanti consentiti, solo raster ZPL METO. Il codice di attivazione NON è l’identità Odoo: chi lo possiede può attivare il servizio, perciò va distribuito solo alle postazioni autorizzate.
+
+Certificato DR Ricambi - METO valido fino al 20 ottobre 2040. Sul PC resta necessaria la configurazione di fiducia QZ; il download del certificato non lo installa. Nessun root Windows/browser modificato. Sessioni revocabili globalmente ruotando QZ_SESSION_KEY; ruotare anche QZ_ENROLLMENT_CODE per impedire nuove attivazioni con il vecchio codice. I singoli PC non hanno revoca separata in questa versione.
+
+Verificati 19 test frontend/Worker, firma reale del servizio pubblicato e attivazione dentro l’iframe Odoo. Nessuna stampa fisica firmata inviata. Le sezioni storiche su firma Python descrivono la soluzione opzionale precedente.
+
 # METO Label Editor — Odoo 19, Cloudflare e QZ Tray
 
 METO compone e stampa etichette per ricambi con testo, SKU, barcode, QR, immagini, linee e riquadri. L'editor gira nel browser ed è distribuito da Cloudflare; QZ Tray sul PC invia la stampa.

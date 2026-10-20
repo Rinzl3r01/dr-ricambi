@@ -30,6 +30,8 @@
     $("qzPermission").textContent = "Il browser non espone lo stato del permesso locale. Se non compare alcuna richiesta, controlla le informazioni del sito.";
   }
   async function connect() {
+    if (window.metoCloudSigning) await window.metoCloudSigning.ready;
+    if (window.metoCloudSigning) await window.metoCloudSigning.ready;
     if (!window.qz) throw new Error("Libreria QZ Tray non disponibile");
     if (connecting) return connecting;
     if (qz.websocket.isActive()) return;
@@ -55,11 +57,11 @@
             await fetch("https://localhost:8181/", { mode: "no-cors", credentials: "omit", cache: "no-store" });
           } catch (_) { /* Alternate QZ ports are still tried by the connector. */ }
         }
-        if (expired) throw new Error("Richiesta di collegamento già scaduta");
+        if (expired) throw new Error("Richiesta di collegamento giÃ  scaduta");
         return qz.websocket.connect({ retries: 0 });
       };
       connecting = Promise.race([establish(), deadline]).catch(err => {
-        throw new Error("QZ Tray non raggiungibile. Verifica che sia avviato e consenti al browser l’accesso alle app di questo dispositivo. Se il permesso è bloccato, apri METO in una scheda separata per verificarlo. Dettaglio: " + (err.message || String(err)));
+        throw new Error("QZ Tray non raggiungibile. Verifica che sia avviato e consenti al browser lâ€™accesso alle app di questo dispositivo. Se il permesso Ã¨ bloccato, apri METO in una scheda separata per verificarlo. Dettaglio: " + (err.message || String(err)));
       }).finally(() => { clearTimeout(watchdog); connecting = null; $("connectQz").disabled = false; });
     }
     await connecting;
@@ -118,7 +120,7 @@
         $("printerSelect").value = preferred.ip; host.value = preferred.ip;
         localStorage.setItem("meto.qz.networkHost", preferred.ip);
       }
-      setStatus(found.length ? `Rete: ${found.length} indirizzi con porta 9100 raggiungibile. Seleziona quello dell’etichettatrice.` : "Nessuna connessione confermata agli IP METO configurati. Controlla indirizzo, rete e autorizzazioni QZ; un rifiuto o timeout non prova che la stampante sia spenta.");
+      setStatus(found.length ? `Rete: ${found.length} indirizzi con porta 9100 raggiungibile. Seleziona quello dellâ€™etichettatrice.` : "Nessuna connessione confermata agli IP METO configurati. Controlla indirizzo, rete e autorizzazioni QZ; un rifiuto o timeout non prova che la stampante sia spenta.");
       return;
     }
     const names = [...new Set((await qz.printers.find()).filter(isLabelPrinter))];
@@ -157,7 +159,7 @@
     try {
       const target = mode.value === "network" ? { host: networkHost(), port: 9100 } : $("printerSelect").value;
       if (!target) throw new Error("Seleziona una stampante");
-      if (mode.value !== "network" && !systemPrinters.has(target)) throw new Error("Cerca e seleziona un’etichettatrice METO / Zebra / ZPL");
+      if (mode.value !== "network" && !systemPrinters.has(target)) throw new Error("Cerca e seleziona unâ€™etichettatrice METO / Zebra / ZPL");
       await connect();
       const zpl = await makeZpl(payload);
       setStatus("Invio stampa: conferma l'autorizzazione QZ Tray se richiesta");
@@ -169,7 +171,7 @@
     if (payload.type === "discover") return discover().catch(error);
     if (payload.type === "print") return print(payload).catch(error);
   } };
-  $("connectQz").addEventListener("click", () => connect().then(() => setStatus("QZ Tray collegato. Premi Cerca stampanti PC o Cerca rete, oppure inserisci l’IP e stampa.")).catch(error));
+  $("connectQz").addEventListener("click", () => connect().then(() => setStatus("QZ Tray collegato. Premi Cerca stampanti PC o Cerca rete, oppure inserisci lâ€™IP e stampa.")).catch(error));
   $("testNetworkIp").addEventListener("click", async () => {
     if (printing || discovering) return;
     $("testNetworkIp").disabled = true;

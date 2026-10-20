@@ -1,3 +1,4 @@
+import { signingRoute } from "./signing.mjs";
 export function allowedOrigins(value = "") {
   return [...new Set(value.split(",").map(v => v.trim()).filter(Boolean).map(value => {
     const url = new URL(value);
@@ -11,6 +12,7 @@ export default {
     try { origins = allowedOrigins(env.ODOO_ORIGINS); }
     catch { return new Response("Configurazione origini Odoo non valida", { status: 503 }); }
     const url = new URL(request.url);
+    if (url.pathname.startsWith("/api/qz/")) return signingRoute(request, env);
     if (!["GET", "HEAD"].includes(request.method)) return new Response("Method not allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
     let response;
     if (url.pathname === "/config.json") {
